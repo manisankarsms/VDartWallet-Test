@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         Animation myAnim = AnimationUtils.loadAnimation(this,R.anim.splashanim);
         iv.startAnimation(myAnim);
         mHandler.postDelayed(() -> {
-            Intent intent = new Intent(MainActivity.this, Login.class);
+            Intent intent = new Intent(MainActivity.this, Home.class);
             finish();
             startActivity(intent);
         }, 1000);

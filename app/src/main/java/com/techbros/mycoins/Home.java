@@ -51,8 +51,8 @@ public class Home extends AppCompatActivity {
         tv2 = findViewById(R.id.textView2);
         btnSend = findViewById(R.id.button);
         Bundle bundle = getIntent().getExtras();
-        uId = bundle.getString("userId");
-        //uId = "12345";
+        //uId = bundle.getString("userId");
+        uId = "12345";
         myRef = database.getReference("userDetails/"+uId);
         //setListView();
         gRef.orderByKey().limitToLast(10).addValueEventListener(new ValueEventListener() {
@@ -72,7 +72,6 @@ public class Home extends AppCompatActivity {
                 }
                 Collections.reverse(transactionArrayList);
                 setListView(transactionArrayList);
-
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
