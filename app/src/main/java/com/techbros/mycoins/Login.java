@@ -26,7 +26,7 @@ public class Login extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference myRef = database.getReference("userDetails");
-
+    static String userType;
     CircularProgressIndicator progressIndicator;
     TextInputLayout et1, et2;
     Button b1;
@@ -69,7 +69,7 @@ public class Login extends AppCompatActivity {
                                 }
                                 else{
                                     et2.setError(null);
-                                    String userType = String.valueOf(dataSnapshot.child("userType").getValue());
+                                    userType = String.valueOf(dataSnapshot.child("userType").getValue());
                                     switch (userType) {
                                         case "employee": {
                                             Intent intent = new Intent(getApplicationContext(), Home.class);

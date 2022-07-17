@@ -55,7 +55,7 @@ public class Home extends AppCompatActivity {
         //uId = "12345";
         myRef = database.getReference("userDetails/"+uId);
         //setListView();
-        gRef.addValueEventListener(new ValueEventListener() {
+        gRef.orderByKey().limitToLast(10).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
@@ -70,6 +70,7 @@ public class Home extends AppCompatActivity {
                         continue;
                     transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tTo,tId,tType));
                 }
+                Collections.reverse(transactionArrayList);
                 setListView(transactionArrayList);
 
             }
@@ -109,42 +110,5 @@ public class Home extends AppCompatActivity {
         ListView listView = findViewById(R.id.lv1);
         TransactionAdapter adapter = new TransactionAdapter(this, transactionArrayList);
         listView.setAdapter(adapter);
-    }
-}
-class TransactionAdapter extends ArrayAdapter<Transaction> {
-
-
-    public TransactionAdapter(Activity context, ArrayList<Transaction> transactionDetails){
-        super(context, 0, transactionDetails);
-    }
-
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent){
-
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.transaction_list, parent, false
-            );
-        }
-
-        Transaction transactionDetails = getItem(position);
-
-        TextView textView1 = (TextView) listItemView.findViewById(R.id.from);
-        textView1.setText("FROM: "+transactionDetails.gettFrom());
-
-        TextView textView2 = (TextView) listItemView.findViewById(R.id.to);
-        textView2.setText("TO: "+transactionDetails.gettTo());
-
-        TextView textView3 = (TextView) listItemView.findViewById(R.id.coins);
-        if(transactionDetails.gettType().equals("Payment"))
-            textView3.setTextColor(Color.parseColor("#a7c44c"));
-        textView3.setText(String.valueOf(transactionDetails.gettCoins()));
-
-        TextView textView4 = (TextView) listItemView.findViewById(R.id.date);
-        textView4.setText(transactionDetails.gettDate());
-
-        return listItemView;
     }
 }

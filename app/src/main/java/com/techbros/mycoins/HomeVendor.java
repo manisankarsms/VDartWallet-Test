@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +20,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.WriterException;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
@@ -30,6 +35,8 @@ public class HomeVendor extends AppCompatActivity {
     Bitmap bitmap;
     QRGEncoder qrgEncoder;
     ImageView qrCodeIV;
+    DatabaseReference gRef = database.getReference("transactions");
+    ArrayList<Transaction> transactionArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,32 @@ public class HomeVendor extends AppCompatActivity {
                 // Failed to read value
             }
         });
+
+        gRef.orderByKey().limitToLast(50).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey();
+                    String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
+                    String tDate  = dataSnapshot.child(key).child("tDate").getValue().toString();
+                    String tFrom  = dataSnapshot.child(key).child("tFrom").getValue().toString();
+                    String tTo  = dataSnapshot.child(key).child("tTo").getValue().toString();
+                    String tId  = dataSnapshot.child(key).child("tId").getValue().toString();
+                    String tType  = dataSnapshot.child(key).child("tType").getValue().toString();
+                    if(!(tFrom.equals(uId) || tTo.equals(uId)))
+                        continue;
+                    transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tTo,tId,tType));
+                }
+                Collections.reverse(transactionArrayList);
+                setListView(transactionArrayList);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+            }
+        });
+
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         // initializing a variable for default display.
@@ -94,5 +127,12 @@ public class HomeVendor extends AppCompatActivity {
 
     private String encode(String uId){
         return Base64.encodeToString(uId.getBytes(),0);
+    }
+
+    private void setListView(ArrayList<Transaction> transactionArrayList) {
+
+        ListView listView = findViewById(R.id.lv1);
+        TransactionAdapter adapter = new TransactionAdapter(this, transactionArrayList);
+        listView.setAdapter(adapter);
     }
 }

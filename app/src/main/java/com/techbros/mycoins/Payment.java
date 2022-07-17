@@ -90,7 +90,7 @@ public class Payment extends AppCompatActivity {
                                     myRef1.child(uId).child("balance").setValue(fromBalance);
                                     String tDate = Transaction.getDate();
                                     String tId = Transaction.generateTId();
-                                    Transaction t = new Transaction(Integer.valueOf(tValue),tDate,uId,toUser,tId,"Payment");
+                                    Transaction t = new Transaction(Integer.valueOf(tValue),tDate,uId,toId,tId,"Payment");
                                     myRef2.child("transactions").child(tId).setValue(t);
                                     Intent intent = new Intent(getApplicationContext(), Home.class);
                                     intent.putExtra("userId", uId);
