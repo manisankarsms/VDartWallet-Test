@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyCoins">
         <activity
+            android:name=".Encash"
+            android:exported="false" />
+        <activity
             android:name=".EmployeeAddDeleteUpdate"
             android:exported="false" />
         <activity

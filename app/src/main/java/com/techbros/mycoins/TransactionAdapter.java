@@ -41,7 +41,7 @@ class TransactionAdapter extends ArrayAdapter<Transaction> {
         if(Login.userType.equals("store")){
             if(transactionDetails.gettType().equals("Payment"))
                 textView3.setTextColor(Color.parseColor("#a7c44c"));
-            else if(transactionDetails.gettType().equals("Encash")) {
+            else if(transactionDetails.gettType().equals("EncashRequest")) {
                 textView3.setTextColor(Color.RED);
                 listItemView.setBackgroundColor(Color.parseColor("#a7c44c"));
             }
