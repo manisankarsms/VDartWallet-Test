@@ -3,17 +3,21 @@ package com.techbros.mycoins;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +39,8 @@ public class HomeVendor extends AppCompatActivity {
     Bitmap bitmap;
     QRGEncoder qrgEncoder;
     ImageView qrCodeIV;
+    Button btnEncash;
+    String uId,uBalance;
     DatabaseReference gRef = database.getReference("transactions");
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
 
@@ -44,17 +50,18 @@ public class HomeVendor extends AppCompatActivity {
         setContentView(R.layout.activity_home_vendor);
         tv1 = findViewById(R.id.username);
         tv2 = findViewById(R.id.textView2);
+        btnEncash = findViewById(R.id.materialButton);
         qrCodeIV = findViewById(R.id.imageView);
 
         Bundle bundle = getIntent().getExtras();
-        String uId = bundle.getString("userId");
+        uId = bundle.getString("userId");
         myRef = database.getReference("userDetails/"+uId);
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String uName = String.valueOf(dataSnapshot.child("userName").getValue());
-                String uBalance = String.valueOf(dataSnapshot.child("balance").getValue());
+                uBalance = String.valueOf(dataSnapshot.child("balance").getValue());
                 tv1.setText(uName);
                 tv2.setText(uBalance);
             }
@@ -123,6 +130,47 @@ public class HomeVendor extends AppCompatActivity {
             // exception handling.
             Log.e("Tag", e.toString());
         }
+
+
+        btnEncash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Integer.valueOf(uBalance) > 0) {
+                new MaterialAlertDialogBuilder(HomeVendor.this)
+                        .setTitle("CONFIRM")
+                        .setMessage("Are you sure to send the total of " + uBalance + " Coins")
+                        .setPositiveButton("APPROVE", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String tDate = Transaction.getDate();
+                                String tId = Transaction.generateTId();
+                                Transaction t = new Transaction(Integer.valueOf(uBalance),tDate,uId,"superadmin",tId,"EncashRequest");
+                                gRef.child(tId).setValue(t);
+                                return;
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                return;
+                            }
+                        })
+                        .show();
+                }
+                else{
+                    new MaterialAlertDialogBuilder(HomeVendor.this)
+                            .setTitle("ALERT")
+                            .setMessage("Low Balance")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    return;
+                                }
+                            })
+                            .show();
+                }
+            }
+        });
     }
 
     private String encode(String uId){

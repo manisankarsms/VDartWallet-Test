@@ -22,7 +22,7 @@ import androidmads.library.qrgenearator.QRGEncoder;
 public class SuperAdminDashboard extends AppCompatActivity {
 
 
-    CardView c1, c2, c3;
+    CardView c1, c2, c3, c4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +31,8 @@ public class SuperAdminDashboard extends AppCompatActivity {
         c1 = findViewById(R.id.cv1);
         c2 = findViewById(R.id.cv2);
         c3 = findViewById(R.id.cv3);
+        c4 = findViewById(R.id.cv4);
+
 
 
         c1.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +55,14 @@ public class SuperAdminDashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Encash.class);
+                startActivity(intent);
+            }
+        });
+
+        c4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Reports.class);
                 startActivity(intent);
             }
         });

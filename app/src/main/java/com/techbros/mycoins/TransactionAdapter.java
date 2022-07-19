@@ -38,22 +38,22 @@ class TransactionAdapter extends ArrayAdapter<Transaction> {
 
         TextView textView3 = (TextView) listItemView.findViewById(R.id.coins);
 
-        if(Login.userType.equals("store")){
-            if(transactionDetails.gettType().equals("Payment"))
-                textView3.setTextColor(Color.parseColor("#a7c44c"));
-            else if(transactionDetails.gettType().equals("EncashRequest")) {
-                textView3.setTextColor(Color.RED);
-                listItemView.setBackgroundColor(Color.parseColor("#a7c44c"));
-            }
-        }
-        else{
-            if(transactionDetails.gettType().equals("Payment"))
-                textView3.setTextColor(Color.RED);
-            else if(transactionDetails.gettType().equals("Credit")) {
-                listItemView.setBackgroundColor(Color.parseColor("#a7c44c"));
-                textView3.setTextColor(Color.RED);
-            }
-        }
+//        if(Login.userType.equals("store")){
+//            if(transactionDetails.gettType().equals("Payment"))
+//                textView3.setTextColor(Color.parseColor("#a7c44c"));
+//            else if(transactionDetails.gettType().equals("EncashRequest")) {
+//                textView3.setTextColor(Color.RED);
+//                listItemView.setBackgroundColor(Color.parseColor("#a7c44c"));
+//            }
+//        }
+//        else{
+//            if(transactionDetails.gettType().equals("Payment"))
+//                textView3.setTextColor(Color.RED);
+//            else if(transactionDetails.gettType().equals("Credit")) {
+//                listItemView.setBackgroundColor(Color.parseColor("#a7c44c"));
+//                textView3.setTextColor(Color.RED);
+//            }
+//        }
 
         textView3.setText(String.valueOf(transactionDetails.gettCoins()));
 
