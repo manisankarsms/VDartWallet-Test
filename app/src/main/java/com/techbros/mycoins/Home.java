@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +33,7 @@ import java.util.Date;
 public class Home extends AppCompatActivity {
 
     ValueEventListener valueEventListener;
+    TabLayout tabLayout;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference myRef,myRef1;
@@ -51,13 +54,14 @@ public class Home extends AppCompatActivity {
         tv2 = findViewById(R.id.textView2);
         btnSend = findViewById(R.id.button);
         Bundle bundle = getIntent().getExtras();
-        //uId = bundle.getString("userId");
-        uId = "12345";
+        uId = bundle.getString("userId");
+//        uId = "12345";
         myRef = database.getReference("userDetails/"+uId);
         //setListView();
         gRef.orderByKey().limitToLast(10).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                transactionArrayList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
                     String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
@@ -98,7 +102,7 @@ public class Home extends AppCompatActivity {
             public void onClick(View v) {
 //                myRef.removeEventListener(valueEventListener);
                 startActivity(new Intent(getApplicationContext(), ScanBarCodeActivity.class));
-                finishAffinity();
+
             }
         });
 

@@ -74,6 +74,7 @@ public class HomeVendor extends AppCompatActivity {
         gRef.orderByKey().limitToLast(50).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                transactionArrayList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
                     String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
@@ -139,7 +140,7 @@ public class HomeVendor extends AppCompatActivity {
                 new MaterialAlertDialogBuilder(HomeVendor.this)
                         .setTitle("CONFIRM")
                         .setMessage("Are you sure to send the total of " + uBalance + " Coins")
-                        .setPositiveButton("APPROVE", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String tDate = Transaction.getDate();

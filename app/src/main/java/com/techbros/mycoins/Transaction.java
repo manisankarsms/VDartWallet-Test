@@ -1,6 +1,7 @@
 package com.techbros.mycoins;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 class Transaction {
@@ -80,7 +81,7 @@ class Transaction {
         return dateVal;
     }
     static String getDate(){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat();
         Date date = new Date();
         String dateVal = formatter.format(date);
         return dateVal;
