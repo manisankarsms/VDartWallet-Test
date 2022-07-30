@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.cert.PolicyNode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,14 +39,15 @@ public class Home extends AppCompatActivity {
     TabLayout tabLayout;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
-    DatabaseReference myRef,myRef1;
+    DatabaseReference myRef,ref2,myRef1;
     DatabaseReference gRef = database.getReference("transactions");
     static String uName,uBalance;
     String tTo,tValue;
     static String uId;
+    static int utilized,maxLimitV,utilizable;
     String tCountDay,tCountTotal,lastTransactedDate;
     String fromUserBalance,toUserBalance;
-    TextView tv1,tv2;
+    TextView tv1,tv2,maxLimit,utilizedTV;
     EditText et1,et2;
     Button btnSend;
     @Override
@@ -52,12 +56,17 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         tv1 = findViewById(R.id.username);
         tv2 = findViewById(R.id.textView2);
+        maxLimit = findViewById(R.id.maxLimit);
+        utilizedTV = findViewById(R.id.utilized);
         btnSend = findViewById(R.id.button);
         Bundle bundle = getIntent().getExtras();
         uId = bundle.getString("userId");
 //        uId = "12345";
         myRef = database.getReference("userDetails/"+uId);
         //setListView();
+
+        ref2 = database.getReference();
+
         gRef.orderByKey().limitToLast(10).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -76,6 +85,25 @@ public class Home extends AppCompatActivity {
                 }
                 Collections.reverse(transactionArrayList);
                 setListView(transactionArrayList);
+                utilized = 0;
+                for(int i=0;i<transactionArrayList.size();i++){
+                    if(transactionArrayList.get(i).gettType().equalsIgnoreCase("payment")) {
+                        String todayDate = Transaction.getDate();
+                        String tDate = transactionArrayList.get(i).gettDate();
+                        SimpleDateFormat formatr = new SimpleDateFormat("dd/MM/yy");
+                        try {
+                            Date today = formatr.parse(todayDate);
+                            Date trDate = formatr.parse(tDate);
+                            if (!trDate.equals(today)) {
+                                continue;
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        utilized = utilized+Integer.valueOf(transactionArrayList.get(i).gettCoins());
+                    }
+                }
+                utilizedTV.setText("Coins Spent Today "+utilized);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -86,10 +114,28 @@ public class Home extends AppCompatActivity {
         valueEventListener = myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
                 uName = dataSnapshot.child("userName").getValue().toString();
                 uBalance = dataSnapshot.child("balance").getValue().toString();
                 tv1.setText("Hi, "+uName);
                 tv2.setText(uBalance);
+
+                String uType = dataSnapshot.child("userType").getValue().toString();
+                ref2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(uType.equalsIgnoreCase("employee"))
+                        maxLimitV = Integer.valueOf(dataSnapshot.child("coinsLimitEmp").getValue().toString());
+                        else
+                            maxLimitV = Integer.valueOf(dataSnapshot.child("coinsLimitGuest").getValue().toString());
+                        maxLimit.setText("Max Limit/Day "+maxLimitV+" coins");
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        // Failed to read value
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -101,13 +147,47 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                myRef.removeEventListener(valueEventListener);
-                startActivity(new Intent(getApplicationContext(), ScanBarCodeActivity.class));
+                utilizable = maxLimitV - utilized;
+                if(maxLimitV<=utilized){
+                    new MaterialAlertDialogBuilder(Home.this)
+                            .setTitle("ALERT")
+                            .setMessage("MAXIMUM LIMIT REACHED")
+                            .setCancelable(true)
+                            .show();
 
+                    return;
+                }
+                else {
+                    startActivity(new Intent(getApplicationContext(), ScanBarCodeActivity.class));
+                }
             }
         });
 
         //updateCoins();
     }
+
+    @Override
+    public void onBackPressed() {
+        new MaterialAlertDialogBuilder(Home.this)
+                .setTitle("ALERT")
+                .setMessage("Are you sure to logout")
+                .setCancelable(false)
+                .setPositiveButton("LOGOUT",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(getApplicationContext(),Login.class));
+                        finish();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                })
+                .show();
+    }
+
     private void setListView(ArrayList<Transaction> transactionArrayList) {
 
         ListView listView = findViewById(R.id.lv1);

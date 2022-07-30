@@ -73,7 +73,11 @@ public class Payment extends AppCompatActivity {
                     tVal.setError("Enter a Valid Value");
                     return;
                 }
-                if (Integer.valueOf(tValue) > Integer.valueOf(uBalance)) {
+                if (Home.utilizable < Integer.valueOf(tValue)) {
+                    tVal.setError("Maximum Utilizable Amount: "+Home.utilizable);
+                }
+
+                else if (Integer.valueOf(tValue) > Integer.valueOf(uBalance)) {
                     tVal.setError("Maximum Transferable Amount: "+uBalance);
                 }
                 else{

@@ -39,17 +39,17 @@ class TransactionAdapter extends ArrayAdapter<Transaction> {
         TextView textView3 = (TextView) listItemView.findViewById(R.id.coins);
 
         if(Login.userType.equals("store")){
-            if(transactionDetails.gettType().equals("Payment"))
+            if(transactionDetails.gettType().equalsIgnoreCase("Payment"))
                 textView3.setTextColor(Color.parseColor("#a7c44c"));
-            else if(transactionDetails.gettType().equals("EncashRequest")) {
+            else if(transactionDetails.gettType().equalsIgnoreCase("EncashRequest")) {
                 textView3.setTextColor(Color.RED);
                 listItemView.setBackgroundColor(Color.parseColor("#a7c44c"));
             }
         }
         else{
-            if(transactionDetails.gettType().equals("Payment"))
+            if(transactionDetails.gettType().equalsIgnoreCase("Payment"))
                 textView3.setTextColor(Color.RED);
-            else if(transactionDetails.gettType().equals("Credit")) {
+            else if(transactionDetails.gettType().equalsIgnoreCase("Credit")) {
                 listItemView.setBackgroundColor(Color.parseColor("#a7c44c"));
                 textView3.setTextColor(Color.RED);
             }

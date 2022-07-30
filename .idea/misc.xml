@@ -15,7 +15,12 @@
         <entry key="app/src/main/res/layout/activity_reports.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_scan_bar_code.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_super_admin_dashboard.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/add_coins.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/dropdown_layout.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/spinner_text.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/transaction_list.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/user_dialog.xml" value="0.27297297297297296" />
+        <entry key="app/src/main/res/layout/user_list.xml" value="0.375" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1359375" />
       </map>
     </option>

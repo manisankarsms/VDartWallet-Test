@@ -3,6 +3,7 @@ package com.techbros.mycoins;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -116,6 +118,10 @@ public class Login extends AppCompatActivity {
             });
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     private boolean verify(String dbPass, String password) {
