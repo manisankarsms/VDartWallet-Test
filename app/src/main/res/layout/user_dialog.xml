@@ -80,7 +80,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/userPassword"
+        app:layout_constraintBottom_toTopOf="@+id/locEt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userBalance"
@@ -91,6 +91,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/locEt"
+        app:helperText="User_Location"
+        style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/userPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userType"
+        android:hint="Customer Name">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.google.android.material.textfield.TextInputLayout>
     <!--    <com.google.android.material.textfield.TextInputEditText-->
 <!--        android:id="@+id/autoComplete"-->
 <!--        android:layout_width="match_parent"-->
@@ -109,37 +130,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:hint="User Password"
-        app:layout_constraintBottom_toTopOf="@+id/userLocation"
+        app:layout_constraintBottom_toTopOf="@+id/rPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userType">
+        app:layout_constraintTop_toBottomOf="@+id/locEt">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/userLocation"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="User Location"
-        app:layout_constraintBottom_toTopOf="@+id/materialButton2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userPassword">
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/userLocation"-->
+<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:hint="User Location"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/materialButton2"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/userPassword">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/materialButton2"
@@ -152,7 +174,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/materialButton3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userLocation" />
+        app:layout_constraintTop_toBottomOf="@+id/rPass" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/materialButton3"
@@ -165,5 +187,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/materialButton2"
-        app:layout_constraintTop_toBottomOf="@+id/userLocation" />
+        app:layout_constraintTop_toBottomOf="@+id/rPass" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/rPass"
+        android:text="RESET PASSWORD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/materialButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userPassword" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,11 +24,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Locale;
+
 public class Login extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference myRef = database.getReference("userDetails");
-    static String userType;
+    static String userType,uId,location,uName;
     CircularProgressIndicator progressIndicator;
     TextInputLayout et1, et2;
     Button b1;
@@ -45,58 +47,69 @@ public class Login extends AppCompatActivity {
         b1 = findViewById(R.id.login);
 
         b1.setOnClickListener(v -> {
-            String user = et1.getEditText().getText().toString();
+            uId = et1.getEditText().getText().toString();
             String password = et2.getEditText().getText().toString();
             progressIndicator.setVisibility(View.VISIBLE);
 
             Query query = myRef
                     .orderByChild("id")
-                    .equalTo(user);
+                    .equalTo(uId);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getChildrenCount()>0) {
                         et1.setError(null);
                         //username found
-                        myRef.child(user).addValueEventListener(new ValueEventListener() {
+                        myRef.child(uId).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String dbPass = String.valueOf(dataSnapshot.child("password").getValue());
-                                boolean verify = verify(dbPass,password);
-                                if(!verify){
+                                location = String.valueOf(dataSnapshot.child("location").getValue());
+                                uName = String.valueOf(dataSnapshot.child("userName").getValue());
+
+                                boolean verify = verify(dbPass, password);
+                                if (!verify) {
                                     progressIndicator.setVisibility(View.INVISIBLE);
                                     et2.setError("Incorrect Password");
                                     //et2.setHelperText("Incorrect Password");
                                     //Toast.makeText(getApplicationContext(), "Incorrect password", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    et2.setError(null);
-                                    userType = String.valueOf(dataSnapshot.child("userType").getValue());
-                                    switch (userType) {
-                                        case "employee": {
-                                            Intent intent = new Intent(getApplicationContext(), Home.class);
-                                            intent.putExtra("userId", user);
-                                            finish();
-                                            startActivity(intent);
-                                            break;
-                                        }
-                                        case "superadmin": {
-                                            Intent intent = new Intent(getApplicationContext(), SuperAdminDashboard.class);
-                                            startActivity(intent);
-                                            finish();
-                                            break;
-                                        }
-                                        case "store": {
-                                            Intent intent = new Intent(getApplicationContext(), HomeVendor.class);
-                                            intent.putExtra("userId", user);
-                                            finish();
-                                            startActivity(intent);
-                                            break;
+                                } else {
+                                    if (uId.equals(password)) {
+                                        startActivity(new Intent(getApplicationContext(), ResetPassword.class));
+                                        finish();
+                                    } else {
+                                        et2.setError(null);
+                                        userType = String.valueOf(dataSnapshot.child("userType").getValue());
+                                        switch (userType.toLowerCase()) {
+                                            case "employee":
+                                            case "guest": {
+                                                Intent intent = new Intent(getApplicationContext(), Home.class);
+                                                finish();
+                                                startActivity(intent);
+                                                break;
+                                            }
+                                            case "superadmin": {
+                                                Intent intent = new Intent(getApplicationContext(), SuperAdminDashboard.class);
+                                                startActivity(intent);
+                                                finish();
+                                                break;
+                                            }
+                                            case "store": {
+                                                Intent intent = new Intent(getApplicationContext(), HomeVendor.class);
+                                                finish();
+                                                startActivity(intent);
+                                                break;
+                                            }
+                                            case "locationadmin": {
+                                                Intent intent = new Intent(getApplicationContext(), LocationAdmin.class);
+                                                finish();
+                                                startActivity(intent);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                                 // Failed to read value
@@ -121,7 +134,7 @@ public class Login extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        finish();
+        finishAffinity();
     }
 
     private boolean verify(String dbPass, String password) {

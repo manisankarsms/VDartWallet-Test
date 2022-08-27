@@ -29,8 +29,9 @@ public class Payment extends AppCompatActivity {
     TextInputLayout tVal;
     TextView tv1;
     String uId = Home.uId;
+    String uName = Home.uName;
     String uBalance;
-    String toUserBalance,toUser;
+    String toUserBalance,toUser,toUserLocation;
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference myRef1,myRef2;
 
@@ -51,6 +52,7 @@ public class Payment extends AppCompatActivity {
                  uBalance = dataSnapshot.child("userDetails").child(uId).child("balance").getValue().toString();
                  toUserBalance = dataSnapshot.child("userDetails").child(toId).child("balance").getValue().toString();
                  toUser = dataSnapshot.child("userDetails").child(toId).child("userName").getValue().toString();
+                 toUserLocation = dataSnapshot.child("userDetails").child(toId).child("location").getValue().toString();
                  tv1.setText(toUser);
             }
             @Override
@@ -94,7 +96,7 @@ public class Payment extends AppCompatActivity {
                                     myRef1.child(uId).child("balance").setValue(fromBalance);
                                     String tDate = Transaction.getDate();
                                     String tId = Transaction.generateTId();
-                                    Transaction t = new Transaction(Integer.valueOf(tValue),tDate,uId,toId,tId,"Payment");
+                                    Transaction t = new Transaction(Integer.valueOf(tValue),tDate,uId,uName,toId,toUser,tId,"Payment",toUserLocation);
                                     myRef2.child("transactions").child(tId).setValue(t);
                                     Intent intent = new Intent(getApplicationContext(), Home.class);
                                     intent.putExtra("userId", uId);
@@ -115,5 +117,10 @@ public class Payment extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),Home.class));
+        finish();
     }
 }

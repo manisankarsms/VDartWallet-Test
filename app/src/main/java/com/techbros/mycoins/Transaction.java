@@ -1,20 +1,50 @@
 package com.techbros.mycoins;
 
+import androidx.annotation.NonNull;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 
 class Transaction {
     int tCoins;
-    String tDate, tFrom, tTo, tId, tType;
+    String tDate, tFrom, tFromName, tTo, tToName, tId, tType, tLoc;
 
-    public Transaction(int tCoins, String tDate, String tFrom, String tTo, String tId, String tType) {
+    public Transaction(int tCoins, String tDate, String tFrom, String tFromName, String tTo, String tToName, String tId, String tType, String tLoc) {
         this.tCoins = tCoins;
         this.tDate = tDate;
         this.tFrom = tFrom;
+        this.tFromName = tFromName;
         this.tTo = tTo;
+        this.tToName = tToName;
         this.tId = tId;
         this.tType = tType;
+        this.tLoc = tLoc;
+    }
+
+    public String gettFromName() {
+        return tFromName;
+    }
+
+    public void settFromName(String tFromName) {
+        this.tFromName = tFromName;
+    }
+
+    public String gettToName() {
+        return tToName;
+    }
+
+    public void settToName(String tToName) {
+        this.tToName = tToName;
+    }
+
+    public String gettLoc() {
+        return tLoc;
+    }
+
+    public void settLoc(String tLoc) {
+        this.tLoc = tLoc;
     }
 
     public int gettCoins() {
@@ -80,11 +110,10 @@ class Transaction {
 //            tCountt = "0"+tCountt;;
         return dateVal;
     }
+    @NonNull
     static String getDate(){
-        SimpleDateFormat formatter = new SimpleDateFormat();
-        Date date = new Date();
-        String dateVal = formatter.format(date);
-        return dateVal;
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime().toString();
     }
 }
 

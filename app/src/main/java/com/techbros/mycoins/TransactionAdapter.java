@@ -55,10 +55,22 @@ class TransactionAdapter extends ArrayAdapter<Transaction> {
             }
         }
 
-        textView3.setText(String.valueOf(transactionDetails.gettCoins()));
+        textView3.setText("Coins: "+String.valueOf(transactionDetails.gettCoins()));
 
-        TextView textView4 = (TextView) listItemView.findViewById(R.id.date);
-        textView4.setText(transactionDetails.gettDate());
+        TextView textView4 = (TextView) listItemView.findViewById(R.id.fromName);
+        textView4.setText(transactionDetails.gettFromName());
+
+        TextView textView5 = (TextView) listItemView.findViewById(R.id.toName);
+        textView5.setText(transactionDetails.gettToName());
+
+        TextView textView6 = (TextView) listItemView.findViewById(R.id.loc);
+        textView6.setText("Location: "+transactionDetails.gettLoc());
+
+        TextView textView7 = (TextView) listItemView.findViewById(R.id.tType);
+        textView7.setText(transactionDetails.gettType());
+
+        TextView textView8 = (TextView) listItemView.findViewById(R.id.date);
+        textView8.setText(transactionDetails.gettDate());
 
         return listItemView;
     }

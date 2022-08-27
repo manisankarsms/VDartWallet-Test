@@ -39,12 +39,15 @@ public class Encash extends AppCompatActivity {
                     String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
                     String tDate  = dataSnapshot.child(key).child("tDate").getValue().toString();
                     String tFrom  = dataSnapshot.child(key).child("tFrom").getValue().toString();
+                    String tFromName = dataSnapshot.child(key).child("tFromName").getValue().toString();
                     String tTo  = dataSnapshot.child(key).child("tTo").getValue().toString();
+                    String tToName = dataSnapshot.child(key).child("tToName").getValue().toString();
                     String tId  = dataSnapshot.child(key).child("tId").getValue().toString();
                     String tType  = dataSnapshot.child(key).child("tType").getValue().toString();
+                    String tToLocation = dataSnapshot.child(key).child("tLoc").getValue().toString();
                     if(!(tType.equals("EncashRequest")))
                         continue;
-                    transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tTo,tId,tType));
+                    transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tFromName, tTo, tToName,tId,tType,tToLocation));
                 }
                 Collections.reverse(transactionArrayList);
                 setListView(transactionArrayList);
@@ -80,17 +83,6 @@ public class Encash extends AppCompatActivity {
                         // Failed to read value
                     }
                 });
-
-                //Toast.makeText(getApplicationContext(),"Item"+arrayList.get(position).getBlock(), Toast.LENGTH_SHORT).show();
-//                Intent i = new Intent(getApplicationContext(), UserDetailsDisplay.class);
-//                i.putExtra("index", arrayList.get(position).getIndex());
-//                i.putExtra("block", arrayList.get(position).getBlock());
-//                i.putExtra("flatNumber", arrayList.get(position).getFlatNumber());
-//                i.putExtra("name", arrayList.get(position).getName());
-//                i.putExtra("phone", arrayList.get(position).getPhone());
-//                i.putExtra("occupied", arrayList.get(position).getOccupied());
-//                i.putExtra("tenantName", arrayList.get(position).getTenantName());
-//                startActivity(i);
 
                 new MaterialAlertDialogBuilder(Encash.this)
                         .setTitle("APPROVAL")

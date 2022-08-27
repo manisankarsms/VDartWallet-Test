@@ -182,13 +182,16 @@ public class Reports extends AppCompatActivity {
                                                 }
                                             }
                                             String tFrom  = dataSnapshot.child(key).child("tFrom").getValue().toString();
+                                            String tFromName = dataSnapshot.child(key).child("tFromName").getValue().toString();
                                             String tTo  = dataSnapshot.child(key).child("tTo").getValue().toString();
+                                            String tToName = dataSnapshot.child(key).child("tFromName").getValue().toString();
                                             String tId  = dataSnapshot.child(key).child("tId").getValue().toString();
                                             String tType  = dataSnapshot.child(key).child("tType").getValue().toString();
+                                            String tToLocation = dataSnapshot.child(key).child("tLoc").getValue().toString();
                                             if(tType.equalsIgnoreCase(checkType))
-                                                transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tTo,tId,tType));
+                                                transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tFromName,tTo,tToName,tId,tType,tToLocation));
                                             else if(checkType.equalsIgnoreCase("All"))
-                                                transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tTo,tId,tType));
+                                                transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tFromName,tTo,tToName,tId,tType,tToLocation));
                                         }
                                         Collections.reverse(transactionArrayList);
                                         setListView(transactionArrayList);
@@ -221,10 +224,13 @@ public class Reports extends AppCompatActivity {
                     String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
                     String tDate  = dataSnapshot.child(key).child("tDate").getValue().toString();
                     String tFrom  = dataSnapshot.child(key).child("tFrom").getValue().toString();
+                    String tFromName = dataSnapshot.child(key).child("tFromName").getValue().toString();
                     String tTo  = dataSnapshot.child(key).child("tTo").getValue().toString();
+                    String tToName = dataSnapshot.child(key).child("tFromName").getValue().toString();
                     String tId  = dataSnapshot.child(key).child("tId").getValue().toString();
                     String tType  = dataSnapshot.child(key).child("tType").getValue().toString();
-                    transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tTo,tId,tType));
+                    String tToLocation = dataSnapshot.child(key).child("tLoc").getValue().toString();
+                    transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tFromName,tTo,tToName,tId,tType,tToLocation));
                 }
                 Collections.reverse(transactionArrayList);
                 setListView(transactionArrayList);

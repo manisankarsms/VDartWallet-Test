@@ -59,7 +59,7 @@ public class ScanBarCodeActivity extends AppCompatActivity {
 
     private void initialiseDetectorsAndSources() {
 
-        Toast.makeText(getApplicationContext() , "Barcode scanner started" , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext() , "Barcode scanner started" , Toast.LENGTH_SHORT).show();
         barcodeDetector = new BarcodeDetector.Builder(this)
                 .setBarcodeFormats(Barcode.ALL_FORMATS)
                 .build();
@@ -99,7 +99,7 @@ public class ScanBarCodeActivity extends AppCompatActivity {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
-                Toast.makeText(getApplicationContext() , "To prevent memory leaks barcode scanner has been stopped" , Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext() , "To prevent memory leaks barcode scanner has been stopped" , Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -154,5 +154,10 @@ public class ScanBarCodeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         initialiseDetectorsAndSources();
+    }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),Home.class));
+        finish();
     }
 }
