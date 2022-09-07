@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -208,6 +209,9 @@ public class HomeVendor extends AppCompatActivity {
                         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.vdart_logo);
                         scaledbmp = Bitmap.createScaledBitmap(bmp, 250, 250, false);
                         generatePDF();
+                        Uri uri = Uri.parse(String.valueOf(Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_DOWNLOADS)));
+                        openDirectory(uri);
                     }
                 });
             }
@@ -260,7 +264,7 @@ public class HomeVendor extends AppCompatActivity {
                     // the first parameter is our text, second parameter
                     // is position from start, third parameter is position from top
                     // and then we are passing our variable of paint which is title.
-                    ((Canvas) canvas).drawText("VDart Wallet", 250, 100, title);
+                    ((Canvas) canvas).drawText("VDart Cafe Vallet", 220, 100, title);
 
 
                     title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
@@ -331,7 +335,6 @@ public class HomeVendor extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                         startActivity(new Intent(getApplicationContext(),Login.class));
-                        finishAffinity();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -404,5 +407,12 @@ public class HomeVendor extends AppCompatActivity {
                 // Failed to read value
             }
         });
+    }
+
+    public void openDirectory(Uri uriToLoad) {
+        // Choose a directory using the system's file picker.
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setDataAndType(uriToLoad,  "application/pdf");
+        startActivity(intent);
     }
 }

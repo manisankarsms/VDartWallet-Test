@@ -31,7 +31,7 @@ import androidmads.library.qrgenearator.QRGEncoder;
 public class SuperAdminDashboard extends AppCompatActivity{
 
 
-    CardView c1, c2, c3, c4, c5;
+    CardView c1, c2, c3, c4, c5, c6, c7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,9 @@ public class SuperAdminDashboard extends AppCompatActivity{
         c3 = findViewById(R.id.cv3);
         c4 = findViewById(R.id.cv4);
         c5 = findViewById(R.id.cv5);
+        c6 = findViewById(R.id.cv6);
+        c7 = findViewById(R.id.cv7);
+
 
 
         c1.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +59,7 @@ public class SuperAdminDashboard extends AppCompatActivity{
         c2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Backend.class);
+                Intent intent = new Intent(getApplicationContext(), Dashboard.class);
                 startActivity(intent);
             }
         });
@@ -80,7 +83,23 @@ public class SuperAdminDashboard extends AppCompatActivity{
         c5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Dashboard.class);
+                Intent intent = new Intent(getApplicationContext(), Backend.class);
+                startActivity(intent);
+            }
+        });
+
+        c6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DeleteData.class);
+                startActivity(intent);
+            }
+        });
+
+        c7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Feedback.class);
                 startActivity(intent);
             }
         });
@@ -95,8 +114,8 @@ public class SuperAdminDashboard extends AppCompatActivity{
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(getApplicationContext(), Login.class));
                         finishAffinity();
+                        startActivity(new Intent(getApplicationContext(), Login.class));
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -107,81 +126,5 @@ public class SuperAdminDashboard extends AppCompatActivity{
                 })
                 .show();
     }
-
-//    private void checkConnection() {
-//
-//        // initialize intent filter
-//        IntentFilter intentFilter = new IntentFilter();
-//
-//        // add action
-//        intentFilter.addAction("android.new.conn.CONNECTIVITY_CHANGE");
-//
-//        // register receiver
-//        registerReceiver(new ConnectionReceiver(), intentFilter);
-//
-//        // Initialize listener
-//        ConnectionReceiver.Listener = this;
-//
-//        // Initialize connectivity manager
-//        ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//        // Initialize network info
-//        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-//
-//        // get connection status
-//        boolean isConnected = networkInfo != null && networkInfo.isConnectedOrConnecting();
-//
-//        // display snack bar
-//        showSnackBar(isConnected);
-//    }
-//
-//    private void showSnackBar(boolean isConnected) {
-//
-//        // initialize color and message
-//        String message;
-//        int color;
-//
-//        // check condition
-//        if (isConnected) {
-//
-//            // when internet is connected
-//            // set message
-//            message = "Connected to Internet";
-//
-//            // set text color
-//            color = Color.WHITE;
-//
-//        } else {
-//
-//            // when internet
-//            // is disconnected
-//            // set message
-//            message = "Not Connected to Internet";
-//
-//            // set text color
-//            color = Color.RED;
-//        }
-//
-//        // initialize snack bar
-//        Snackbar snackbar = Snackbar.make(findViewById(R.id.cv5), message, Snackbar.LENGTH_LONG);
-//
-//        // initialize view
-//        View view = snackbar.getView();
-//
-//        // Assign variable
-//        TextView textView = view.findViewById(R.id.snackbar_text);
-//
-//        // set text color
-//        textView.setTextColor(color);
-//
-//        // show snack bar
-//        snackbar.show();
-//    }
-//
-//    @Override
-//    public void onNetworkChange(boolean isConnected) {
-//        // display snack bar
-//        showSnackBar(isConnected);
-//    }
 
 }

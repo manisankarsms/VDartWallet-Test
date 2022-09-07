@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -126,10 +128,25 @@ public class ScanBarCodeActivity extends AppCompatActivity {
                                 vibrator.cancel();
                                 vibrator.vibrate(vibrationEffect1);
                             }
-                            Intent intent = new Intent(getApplicationContext(), Payment.class);
-                            intent.putExtra("payerId", pId);
-                            startActivity(intent);
-                            finish();
+                            if(pId!=null){
+                                Intent intent = new Intent(getApplicationContext(), Payment.class);
+                                intent.putExtra("payerId", pId);
+                                startActivity(intent);}
+                            else{
+                                new MaterialAlertDialogBuilder(ScanBarCodeActivity.this)
+                                    .setTitle("ALERT")
+                                    .setMessage("Don't scan other QR codes!")
+                                    .setCancelable(false)
+                                    .setPositiveButton("LOGOUT", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Intent intent = new Intent(getApplicationContext(), Login.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .show();
+                            }
                         }
                     });
                 }
@@ -139,10 +156,28 @@ public class ScanBarCodeActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String decode(String intentData) {
+        try{
+            byte[] decodedBytes = Base64.getDecoder().decode(intentData.trim());
+        }catch (Exception e){
+            return null;
+//            new MaterialAlertDialogBuilder(ScanBarCodeActivity.this)
+//                    .setTitle("ALERT")
+//                    .setMessage("Don't scan other QR codes!")
+//                    .setCancelable(false)
+//                    .setPositiveButton("LOGOUT", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            Intent intent = new Intent(getApplicationContext(), Login.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            startActivity(intent);
+//                        }
+//                    })
+//                    .show();
+
+        }
         byte[] decodedBytes = Base64.getDecoder().decode(intentData.trim());
         return new String(decodedBytes);
     }
-
 
     @Override
     protected void onPause() {

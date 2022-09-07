@@ -10,9 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -23,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Locale;
 
 public class Login extends AppCompatActivity {
 
@@ -39,12 +35,31 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        checkConnection();
+
         et1 = findViewById(R.id.empId);
         et2 = findViewById(R.id.password);
         iv = findViewById(R.id.imageView3);
         progressIndicator = findViewById(R.id.progress_circular);
         progressIndicator.setVisibility(View.INVISIBLE);
         b1 = findViewById(R.id.login);
+
+        et2.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                et2.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         b1.setOnClickListener(v -> {
             uId = et1.getEditText().getText().toString();
@@ -64,7 +79,8 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String dbPass = String.valueOf(dataSnapshot.child("password").getValue());
-                                location = String.valueOf(dataSnapshot.child("location").getValue());
+                                location = String.valueOf(dataSnapshot.child("location").getValue());                                location = String.valueOf(dataSnapshot.child("location").getValue());
+                                String status = String.valueOf(dataSnapshot.child("status").getValue());
                                 uName = String.valueOf(dataSnapshot.child("userName").getValue());
 
                                 boolean verify = verify(dbPass, password);
@@ -74,36 +90,54 @@ public class Login extends AppCompatActivity {
                                     //et2.setHelperText("Incorrect Password");
                                     //Toast.makeText(getApplicationContext(), "Incorrect password", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    if (uId.equals(password)) {
+                                    if(!status.equalsIgnoreCase("Active"))
+                                        new MaterialAlertDialogBuilder(Login.this)
+                                                .setTitle("USER NOT ACTIVE")
+                                                .setMessage("Please Contact Admin")
+                                                .setCancelable(false)
+                                                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        progressIndicator.setVisibility(View.INVISIBLE);
+                                                        return;
+                                                    }
+                                                })
+                                                .show();
+                                    else if (uId.equals(password)) {
                                         startActivity(new Intent(getApplicationContext(), ResetPassword.class));
                                         finish();
                                     } else {
                                         et2.setError(null);
                                         userType = String.valueOf(dataSnapshot.child("userType").getValue());
                                         switch (userType.toLowerCase()) {
+                                            case "intern":
                                             case "employee":
                                             case "guest": {
                                                 Intent intent = new Intent(getApplicationContext(), Home.class);
-                                                finish();
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 startActivity(intent);
+                                                finish();
                                                 break;
                                             }
                                             case "superadmin": {
                                                 Intent intent = new Intent(getApplicationContext(), SuperAdminDashboard.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 startActivity(intent);
                                                 finish();
                                                 break;
                                             }
                                             case "store": {
                                                 Intent intent = new Intent(getApplicationContext(), HomeVendor.class);
-                                                finish();
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 startActivity(intent);
+                                                finish();
                                                 break;
                                             }
                                             case "locationadmin": {
                                                 Intent intent = new Intent(getApplicationContext(), LocationAdmin.class);
-                                                finish();
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 startActivity(intent);
+                                                finish();
                                                 break;
                                             }
                                         }
@@ -120,8 +154,6 @@ public class Login extends AppCompatActivity {
                         // username not found
                         progressIndicator.setVisibility(View.INVISIBLE);
                         et1.setError("User Invalid");
-//                        et1.setHelperText("User Invalid");
-                        Toast.makeText(getApplicationContext(), "User Not Found", Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
@@ -132,6 +164,50 @@ public class Login extends AppCompatActivity {
         });
 
     }
+
+    private void checkConnection() {
+        boolean connectionCheck = ConnectionReceiver.isConnectedToInternet(getApplicationContext());
+        if(!connectionCheck){
+            new MaterialAlertDialogBuilder(Login.this)
+                    .setTitle("NO INTERNET")
+                    .setMessage("Please connect to mobile network or WiFi")
+                    .setCancelable(false)
+                    .setPositiveButton("TryAgain", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            boolean connectionCheck = ConnectionReceiver.isConnectedToInternet(getApplicationContext());
+                            if(!connectionCheck){
+                                new MaterialAlertDialogBuilder(getApplicationContext())
+                                        .setTitle("NO INTERNET")
+                                        .setMessage("Please connect to mobile network or WiFi")
+                                        .setCancelable(false)
+                                        .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                finish();
+                                            }
+                                        })
+                                        .show();
+                            }
+                            else{
+                                new MaterialAlertDialogBuilder(Login.this)
+                                        .setTitle("CONNECTED SUCCESSFULLY")
+                                        .setMessage("You are connected now!")
+                                        .setCancelable(true)
+                                        .show();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .show();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         finishAffinity();

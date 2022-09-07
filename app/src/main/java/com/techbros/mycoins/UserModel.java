@@ -7,14 +7,16 @@ public class UserModel {
     String password;
     String userType;
     String location;
+    String status;
 
-    public UserModel(String id, String userName, String balance, String password, String userType, String location) {
+    public UserModel(String id, String userName, String balance, String password, String userType, String location, String status) {
         this.id = id;
         this.userName = userName;
         this.balance = balance;
         this.password = password;
         this.userType = userType;
         this.location = location;
+        this.status = status;
     }
 
     public String getId() {
@@ -63,5 +65,13 @@ public class UserModel {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

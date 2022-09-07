@@ -89,7 +89,7 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        gRefH.orderByKey().limitToLast(10).addValueEventListener(new ValueEventListener() {
+        gRefH.orderByKey().addValueEventListener(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -119,7 +119,7 @@ public class Home extends AppCompatActivity {
                         //Shift2 - 6PM to 6AM Day 1 and 2
                         LocalDateTime datetime1 = LocalDateTime.now();
                         int Year1 = datetime1.getYear();
-                        LocalDateTime datetime2 = datetime1.plusDays(1);
+                        LocalDateTime datetime2 = datetime1.minusDays(1);
                         int Year2 = datetime2.getYear();
                         //Thu Aug 25 10:29:56 IST 2022
                         DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("EEE MMM dd"); // Setting date format
@@ -133,10 +133,11 @@ public class Home extends AppCompatActivity {
                             SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
                             cal.setTime(formatter.parse(dateVal1+" 06:00:00 GMT+05:30 "+Year1));
                             Date shift1Start = cal.getTime();
-                            cal.setTime(formatter.parse(dateVal1+" 23:59:00 GMT+05:30  "+Year1));
+                            cal.setTime(formatter.parse(dateVal1+" 23:59:59 GMT+05:30  "+Year1));
                             Date shift1End = cal.getTime();
-                            Date shift2Start = shift1End;
-                            cal.setTime(formatter.parse(dateVal2+" 06:00:00 GMT+05:30 "+Year2));
+                            cal.setTime(formatter.parse(dateVal2+" 18:00:00 GMT+05:30 "+Year2));
+                            Date shift2Start = cal.getTime();
+                            cal.setTime(formatter.parse(dateVal1+" 06:00:00 GMT+05:30 "+Year1));
                             Date shift2End = cal.getTime();
 
                             if(current.after(shift1Start) && current.before(shift1End))
@@ -160,7 +161,7 @@ public class Home extends AppCompatActivity {
                         }
                     }
                 }
-                utilizedTV.setText("Coins Spent Today "+utilized);
+                utilizedTV.setText("Today used "+utilized+" Coins");
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -187,7 +188,7 @@ public class Home extends AppCompatActivity {
                         maxLimitV = Integer.valueOf(dataSnapshot.child("coinsLimitEmp").getValue().toString());
                         else
                             maxLimitV = Integer.valueOf(dataSnapshot.child("coinsLimitGuest").getValue().toString());
-                        maxLimit.setText("Max Limit/Day "+maxLimitV+" coins");
+                        maxLimit.setText("Limit/Day "+maxLimitV+" Coins");
                     }
                     @Override
                     public void onCancelled(DatabaseError error) {
@@ -224,7 +225,6 @@ public class Home extends AppCompatActivity {
         btnReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 final Dialog dialog = new Dialog(Home.this);
                 //We have added a title in the custom layout. So let's disable the default title.
                 //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -299,17 +299,20 @@ public class Home extends AppCompatActivity {
             public void onClick(View v) {
                 String comment = feedback.getEditText().getText().toString();
                 if(comment==null || comment.equalsIgnoreCase("")){
-                    feedback.setError("Feedback Cannot be empty");
+                    feedback.setError("Feedback cannot be empty");
                     return;
                 }
                 feedback.setError(null);
                 String tId = Transaction.generateTId();
                 g1RefH.child(tId).child("userId").setValue(Login.uId);
+                g1RefH.child(tId).child("userName").setValue(Login.uName);
                 g1RefH.child(tId).child("feedback").setValue(comment);
+                g1RefH.child(tId).child("fId").setValue(tId);
+                g1RefH.child(tId).child("datetime").setValue(Transaction.getDate());
                 feedback.getEditText().setText(null);
                 new MaterialAlertDialogBuilder(Home.this)
                         .setTitle("THANK YOU")
-                        .setMessage("Your Feedback has been sent")
+                        .setMessage("Your feedback has been sent")
                         .setCancelable(true)
                         .show();
             }
@@ -326,9 +329,10 @@ public class Home extends AppCompatActivity {
                 .setPositiveButton("YES",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(getApplicationContext(),Login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         finish();
-                        startActivity(new Intent(getApplicationContext(),Login.class));
-                        finishAffinity();
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -346,4 +350,5 @@ public class Home extends AppCompatActivity {
         TransactionAdapter adapter = new TransactionAdapter(this, transactionArrayList);
         listView.setAdapter(adapter);
     }
+
 }

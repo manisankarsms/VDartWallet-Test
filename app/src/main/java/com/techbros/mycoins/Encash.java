@@ -34,6 +34,7 @@ public class Encash extends AppCompatActivity {
         gRef.orderByKey().limitToLast(10).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                transactionArrayList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
                     String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
@@ -93,17 +94,17 @@ public class Encash extends AppCompatActivity {
                                 int fromBalance = Integer.valueOf(fromUserBalance) - Integer.valueOf(fromValue);
                                 myRef2.child("userDetails").child(fromStore).child("balance").setValue(fromBalance);
                                 myRef2.child("transactions").child(tId).child("tType").setValue("Encashed");
-                                return;
                             }
                         })
                         .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                return;
+
                             }
                         })
                         .show();
             }
         });
     }
+
 }

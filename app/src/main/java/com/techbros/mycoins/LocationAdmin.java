@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,14 +25,19 @@ public class LocationAdmin extends AppCompatActivity {
     ListView listView,listView1;
     String fromUserBalance,fromUserBalance1;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
+    ArrayList<Transaction> transactionArrayList1 = new ArrayList<>();
     ArrayList<Transaction> coinsRequestList = new ArrayList<>();
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference gRefLA = database.getReference("transactions");
+    DatabaseReference gRefLA1 = database.getReference("transactions");
     DatabaseReference myRef2,myRef3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_admin);
+
+        //ENCASH REQ
+
         gRefLA.orderByKey().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -52,7 +58,8 @@ public class LocationAdmin extends AppCompatActivity {
                         continue;
                     else if (tType.equalsIgnoreCase("CoinRequest")) {
                         coinsRequestList.add(new Transaction(Integer.valueOf(tCoins), tDate, tFrom, tFromName, tTo, tToName, tId, tType, tToLocation));
-                        continue;}
+                        continue;
+                    }
                     else if (!(tType.equalsIgnoreCase("EncashRequest")))
                         continue;
                     transactionArrayList.add(new Transaction(Integer.valueOf(tCoins), tDate, tFrom, tFromName, tTo, tToName, tId, tType, tToLocation));
@@ -70,8 +77,7 @@ public class LocationAdmin extends AppCompatActivity {
         });
     }
 
-
-
+    //STORE ENCASH
     private void setListView(ArrayList<Transaction> transactionArrayList) {
         listView = findViewById(R.id.lvLoc);
         TransactionAdapter adapter = new TransactionAdapter(this, transactionArrayList);
@@ -167,6 +173,27 @@ public class LocationAdmin extends AppCompatActivity {
                         .show();
             }
         });
+    }
+    public void onBackPressed() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("LOGOUT")
+                .setMessage("Are you sure want to logout?")
+                .setCancelable(false)
+                .setPositiveButton("YES",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        startActivity(new Intent(getApplicationContext(),Login.class));
+                        finishAffinity();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                })
+                .show();
     }
 
 }

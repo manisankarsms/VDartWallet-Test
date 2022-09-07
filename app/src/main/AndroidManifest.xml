@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.techbros.mycoins">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INSTALL_GRANT_RUNTIME_PERMISSIONS"
+        tools:ignore="ProtectedPermissions" />
+
 
     <application
         android:allowBackup="true"
@@ -13,6 +17,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyCoins">
+        <activity
+            android:name=".NoInternet"
+            android:exported="false"
+            android:label="@string/title_activity_no_internet"
+            android:theme="@style/Theme.MyCoins.NoActionBar" />
+        <activity
+            android:name=".DeleteData"
+            android:exported="false" />
+        <activity
+            android:name=".Feedback"
+            android:exported="false" />
         <activity
             android:name=".Dashboard"
             android:exported="false" />

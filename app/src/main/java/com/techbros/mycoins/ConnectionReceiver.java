@@ -5,37 +5,18 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class ConnectionReceiver extends BroadcastReceiver {
+public class ConnectionReceiver {
 
     // initialize listener
-    public static ReceiverListener Listener;
+    static boolean isConnectedToInternet(Context context) {
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        // initialize connectivity manager
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
 
-        // Initialize network info
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-        // check condition
-        if (Listener != null) {
-
-            // when connectivity receiver
-            // listener not null
-            // get connection status
-            boolean isConnected = networkInfo != null && networkInfo.isConnectedOrConnecting();
-
-            // call listener method
-            Listener.onNetworkChange(isConnected);
-        }
-    }
-
-    public interface ReceiverListener {
-        // create method
-        void onNetworkChange(boolean isConnected);
+        return isConnected;
     }
 
 }

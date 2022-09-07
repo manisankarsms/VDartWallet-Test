@@ -7,13 +7,16 @@
         <entry key="app/src/main/res/drawable/ic_baseline_qr_code_24.xml" value="0.1359375" />
         <entry key="app/src/main/res/layout/activity_backend.xml" value="0.2149122807017544" />
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/activity_delete_data.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_employee_add_delete_update.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_encash.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_home.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_feedback.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.3202416918429003" />
         <entry key="app/src/main/res/layout/activity_home_vendor.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_location_admin.xml" value="0.2390625" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.21777672838228415" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/activity_no_internet.xml" value="0.225" />
         <entry key="app/src/main/res/layout/activity_payment.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_reports.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/activity_reset_password.xml" value="0.2390625" />
@@ -23,12 +26,13 @@
         <entry key="app/src/main/res/layout/add_coins.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/add_user_dialog.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/dropdown_layout.xml" value="0.2390625" />
+        <entry key="app/src/main/res/layout/feedback_list.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/passcode_verify.xml" value="0.20588235294117646" />
         <entry key="app/src/main/res/layout/request_coins.xml" value="0.2390625" />
         <entry key="app/src/main/res/layout/spinner_text.xml" value="0.2390625" />
-        <entry key="app/src/main/res/layout/transaction_list.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/transaction_list.xml" value="0.2976190476190476" />
         <entry key="app/src/main/res/layout/user_dialog.xml" value="0.2149122807017544" />
-        <entry key="app/src/main/res/layout/user_list.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/user_list.xml" value="0.2570694087403599" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1359375" />
       </map>
     </option>
@@ -38,5 +42,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.18992248062015504" />
+      </ProjectState>
+    </option>
   </component>
 </project>
