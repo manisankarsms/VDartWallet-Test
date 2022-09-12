@@ -1,4 +1,4 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 
 import androidx.appcompat.app.AppCompatActivity;
 

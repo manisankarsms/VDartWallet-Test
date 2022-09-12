@@ -1,17 +1,13 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,8 +16,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import pl.droidsonroids.gif.GifImageView;
 
 public class Payment extends AppCompatActivity {
 
@@ -35,6 +29,7 @@ public class Payment extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference myRef1,myRef2;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,15 +39,15 @@ public class Payment extends AppCompatActivity {
         tv1 = findViewById(R.id.textView9);
         Bundle bundle = getIntent().getExtras();
         String toId = bundle.getString("payerId");
-
-        myRef2 = database.getReference();
-        myRef2.addValueEventListener(new ValueEventListener() {
+        myRef1 = database.getReference("userDetails");
+        myRef2 = database.getReference("transactions");
+        myRef1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                 uBalance = dataSnapshot.child("userDetails").child(uId).child("balance").getValue().toString();
-                 toUserBalance = dataSnapshot.child("userDetails").child(toId).child("balance").getValue().toString();
-                 toUser = dataSnapshot.child("userDetails").child(toId).child("userName").getValue().toString();
-                 toUserLocation = dataSnapshot.child("userDetails").child(toId).child("location").getValue().toString();
+                 uBalance = dataSnapshot.child(uId).child("balance").getValue().toString();
+                 toUserBalance = dataSnapshot.child(toId).child("balance").getValue().toString();
+                 toUser = dataSnapshot.child(toId).child("userName").getValue().toString();
+                 toUserLocation = dataSnapshot.child(toId).child("location").getValue().toString();
                  tv1.setText(toUser);
             }
             @Override
@@ -64,9 +59,6 @@ public class Payment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String tValue = tVal.getEditText().getText().toString();
-                myRef1 = database.getReference("userDetails");
-                myRef2 = database.getReference();
-
                 try{
                     int val = Integer.parseInt(tValue);
                 }
@@ -97,7 +89,7 @@ public class Payment extends AppCompatActivity {
                                     String tDate = Transaction.getDate();
                                     String tId = Transaction.generateTId();
                                     Transaction t = new Transaction(Integer.valueOf(tValue),tDate,uId,uName,toId,toUser,tId,"Payment",toUserLocation);
-                                    myRef2.child("transactions").child(tId).setValue(t);
+                                    myRef2.child(tId).setValue(t);
                                     Intent intent = new Intent(getApplicationContext(), Home.class);
                                     intent.putExtra("userId", uId);
                                     startActivity(intent);

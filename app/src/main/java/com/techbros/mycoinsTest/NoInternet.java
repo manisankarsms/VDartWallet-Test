@@ -1,8 +1,7 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 public class NoInternet extends AppCompatActivity {

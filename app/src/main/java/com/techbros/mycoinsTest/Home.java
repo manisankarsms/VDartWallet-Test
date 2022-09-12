@@ -1,4 +1,4 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,13 +14,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,6 +38,9 @@ public class Home extends AppCompatActivity {
     ValueEventListener valueEventListener;
     boolean shift1 = false, shift2=false;
     ArrayList<Transaction> transactionArrayList = new ArrayList<>();
+    ArrayList<Transaction> transactionArrayListTo = new ArrayList<>();
+    ArrayList<Transaction> transactionArrayListFrom = new ArrayList<>();
+
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference myRefH,ref2H;
     DatabaseReference gRefH = database.getReference("transactions");
@@ -89,11 +93,12 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        gRefH.orderByKey().addValueEventListener(new ValueEventListener() {
+        Query qry = gRefH.orderByChild("tTo").equalTo(uId);
+        qry.addValueEventListener(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                transactionArrayList.clear();
+                transactionArrayListTo.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
                     String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
@@ -105,63 +110,40 @@ public class Home extends AppCompatActivity {
                     String tId  = dataSnapshot.child(key).child("tId").getValue().toString();
                     String tType  = dataSnapshot.child(key).child("tType").getValue().toString();
                     String tToLocation = dataSnapshot.child(key).child("tLoc").getValue().toString();
-                    if(!(tFrom.equals(uId) || tTo.equals(uId)))
-                        continue;
-                    transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom, tFromName,tTo, tToName,tId,tType,tToLocation));
+//                    if(!(tFrom.equals(uId) || tTo.equals(uId)))
+//                        continue;
+                    transactionArrayListTo.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom, tFromName,tTo, tToName,tId,tType,tToLocation));
                 }
-                Collections.reverse(transactionArrayList);
-                setListView(transactionArrayList);
-                utilized = 0;
-                for(int i=0;i<transactionArrayList.size();i++){
-                    if(transactionArrayList.get(i).gettType().equalsIgnoreCase("payment")) {
+                setList();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+            }
+        });
 
-                        //Shift1 - 6AM to 6PM Day 1
-                        //Shift2 - 6PM to 6AM Day 1 and 2
-                        LocalDateTime datetime1 = LocalDateTime.now();
-                        int Year1 = datetime1.getYear();
-                        LocalDateTime datetime2 = datetime1.minusDays(1);
-                        int Year2 = datetime2.getYear();
-                        //Thu Aug 25 10:29:56 IST 2022
-                        DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("EEE MMM dd"); // Setting date format
-                        Date date = new Date();
-                        SimpleDateFormat formatter1 = new SimpleDateFormat("EEE MMM dd");
-                        String dateVal1 = formatter1.format(date);
-                        String dateVal2 = dtFormatter.format(datetime2);
-                        try {
-                            Calendar cal = Calendar.getInstance();
-                            Date current = cal.getTime();
-                            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-                            cal.setTime(formatter.parse(dateVal1+" 06:00:00 GMT+05:30 "+Year1));
-                            Date shift1Start = cal.getTime();
-                            cal.setTime(formatter.parse(dateVal1+" 23:59:59 GMT+05:30  "+Year1));
-                            Date shift1End = cal.getTime();
-                            cal.setTime(formatter.parse(dateVal2+" 18:00:00 GMT+05:30 "+Year2));
-                            Date shift2Start = cal.getTime();
-                            cal.setTime(formatter.parse(dateVal1+" 06:00:00 GMT+05:30 "+Year1));
-                            Date shift2End = cal.getTime();
-
-                            if(current.after(shift1Start) && current.before(shift1End))
-                                shift1=true;
-                            else
-                                shift2=true;
-
-                        //String todayDate = Transaction.getDate();
-                        String tDate = transactionArrayList.get(i).gettDate();
-                           // Date today = formatr.parse(todayDate);
-                            Date trDate = formatter.parse(tDate);
-                            if (shift1) {
-                                if(trDate.after(shift1Start)&&trDate.before(shift1End))
-                                    utilized = utilized+Integer.valueOf(transactionArrayList.get(i).gettCoins());
-                            } else{
-                                if(trDate.after(shift2Start)&&trDate.before(shift2End))
-                                    utilized = utilized+Integer.valueOf(transactionArrayList.get(i).gettCoins());
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
+        Query qry1 = gRefH.orderByChild("tFrom").equalTo(uId);
+        qry1.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                transactionArrayListFrom.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    String key = snapshot.getKey();
+                    String tCoins  = dataSnapshot.child(key).child("tCoins").getValue().toString();
+                    String tDate  = dataSnapshot.child(key).child("tDate").getValue().toString();
+                    String tFrom  = dataSnapshot.child(key).child("tFrom").getValue().toString();
+                    String tFromName = dataSnapshot.child(key).child("tFromName").getValue().toString();
+                    String tTo  = dataSnapshot.child(key).child("tTo").getValue().toString();
+                    String tToName = dataSnapshot.child(key).child("tToName").getValue().toString();
+                    String tId  = dataSnapshot.child(key).child("tId").getValue().toString();
+                    String tType  = dataSnapshot.child(key).child("tType").getValue().toString();
+                    String tToLocation = dataSnapshot.child(key).child("tLoc").getValue().toString();
+//                    if(!(tFrom.equals(uId) || tTo.equals(uId)))
+//                        continue;
+                    transactionArrayListFrom.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom, tFromName,tTo, tToName,tId,tType,tToLocation));
                 }
-                utilizedTV.setText("Today used "+utilized+" Coins");
+                setList();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -318,6 +300,67 @@ public class Home extends AppCompatActivity {
             }
         });
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setList() {
+        transactionArrayList.clear();
+        transactionArrayList.addAll(transactionArrayListTo);
+        transactionArrayList.addAll(transactionArrayListFrom);
+        //transactionArrayList.sort((Transaction t1, Transaction t2)->t1.gettId().compareTo(t2.gettId()));
+        Collections.reverse(transactionArrayList);
+        setListView(transactionArrayList);
+        utilized = 0;
+        for(int i=0;i<transactionArrayList.size();i++){
+            if(transactionArrayList.get(i).gettType().equalsIgnoreCase("payment")) {
+
+                //Shift1 - 6AM to 6PM Day 1
+                //Shift2 - 6PM to 6AM Day 1 and 2
+                LocalDateTime datetime1 = LocalDateTime.now();
+                int Year1 = datetime1.getYear();
+                LocalDateTime datetime2 = datetime1.minusDays(1);
+                int Year2 = datetime2.getYear();
+                //Thu Aug 25 10:29:56 IST 2022
+                DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("EEE MMM dd"); // Setting date format
+                Date date = new Date();
+                SimpleDateFormat formatter1 = new SimpleDateFormat("EEE MMM dd");
+                String dateVal1 = formatter1.format(date);
+                String dateVal2 = dtFormatter.format(datetime2);
+                try {
+                    Calendar cal = Calendar.getInstance();
+                    Date current = cal.getTime();
+                    SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+                    cal.setTime(formatter.parse(dateVal1+" 06:00:00 GMT+05:30 "+Year1));
+                    Date shift1Start = cal.getTime();
+                    cal.setTime(formatter.parse(dateVal1+" 23:59:59 GMT+05:30  "+Year1));
+                    Date shift1End = cal.getTime();
+                    cal.setTime(formatter.parse(dateVal2+" 18:00:00 GMT+05:30 "+Year2));
+                    Date shift2Start = cal.getTime();
+                    cal.setTime(formatter.parse(dateVal1+" 06:00:00 GMT+05:30 "+Year1));
+                    Date shift2End = cal.getTime();
+
+                    if(current.after(shift1Start) && current.before(shift1End))
+                        shift1=true;
+                    else
+                        shift2=true;
+
+                    //String todayDate = Transaction.getDate();
+                    String tDate = transactionArrayList.get(i).gettDate();
+                    // Date today = formatr.parse(todayDate);
+                    Date trDate = formatter.parse(tDate);
+                    if (shift1) {
+                        if(trDate.after(shift1Start)&&trDate.before(shift1End))
+                            utilized = utilized+Integer.valueOf(transactionArrayList.get(i).gettCoins());
+                    } else{
+                        if(trDate.after(shift2Start)&&trDate.before(shift2End))
+                            utilized = utilized+Integer.valueOf(transactionArrayList.get(i).gettCoins());
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        utilizedTV.setText("Today used "+utilized+" Coins");
     }
 
     @Override

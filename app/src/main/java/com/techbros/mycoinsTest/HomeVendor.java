@@ -1,4 +1,4 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +17,7 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -44,16 +45,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 public class HomeVendor extends AppCompatActivity {
 
+    TextToSpeech textToSpeech;
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://mycoins-811bc-default-rtdb.asia-southeast1.firebasedatabase.app");
     DatabaseReference myRefHV;
     DatabaseReference myRefPass = database.getReference("storeEncashPasscode");
     TextView tv1,tv2;
+    String prevId;
+    int flag=0;
+    static int previous,current=0;
     Bitmap bitmap,bmp,scaledbmp;
     QRGEncoder qrgEncoder;
     ImageView qrCodeIV;
@@ -112,47 +118,6 @@ public class HomeVendor extends AppCompatActivity {
             // exception handling.
             Log.e("Tag", e.toString());
         }
-
-
-//        btnEncash.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (Integer.valueOf(uBalance) > 0) {
-//                new MaterialAlertDialogBuilder(HomeVendor.this)
-//                        .setTitle("CONFIRM")
-//                        .setMessage("Are you sure to send the total of " + uBalance + " Coins")
-//                        .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                String tDate = Transaction.getDate();
-//                                String tId = Transaction.generateTId();
-//                                Transaction t = new Transaction(Integer.valueOf(uBalance),tDate,uId,uName,"superadmin","VDART",tId,"EncashRequest",uLocation);
-//                                gRef.child(tId).setValue(t);
-//                                return;
-//                            }
-//                        })
-//                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                return;
-//                            }
-//                        })
-//                        .show();
-//                }
-//                else{
-//                    new MaterialAlertDialogBuilder(HomeVendor.this)
-//                            .setTitle("ALERT")
-//                            .setMessage("Low Balance")
-//                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                    return;
-//                                }
-//                            })
-//                            .show();
-//                }
-//            }
-//        });
 
         btnEncash.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -314,10 +279,17 @@ public class HomeVendor extends AppCompatActivity {
     }
 
     private void setListView(ArrayList<Transaction> transactionArrayList) {
-
+        current= transactionArrayList.size();
+        if(previous!=current && flag==1){
+            String val = String.valueOf(transactionArrayList.get(0).gettCoins());
+            String from = transactionArrayList.get(0).gettFromName();
+            speak(val, from);
+            previous = transactionArrayList.size();
+        }
         ListView listView = findViewById(R.id.lv1);
         TransactionAdapter adapter = new TransactionAdapter(this, transactionArrayList);
         listView.setAdapter(adapter);
+        flag=1;
     }
 
     private boolean verify(String dbPass, String password) {
@@ -346,6 +318,17 @@ public class HomeVendor extends AppCompatActivity {
                 .show();
     }
     void init(){
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+
+                // if No error is found then only it will run
+                if(i!=TextToSpeech.ERROR){
+                    // To Choose language of speech
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+            }
+        });
         myRefHV = database.getReference("userDetails/" + uId);
 
         myRefHV.addValueEventListener(new ValueEventListener() {
@@ -375,10 +358,10 @@ public class HomeVendor extends AppCompatActivity {
                 // Failed to read value
             }
         });
-
-        gRef.orderByKey().limitToLast(50).addValueEventListener(new ValueEventListener() {
+        gRef.orderByChild("tTo").equalTo(uId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(transactionArrayList.size()!=0)
                 transactionArrayList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
@@ -390,16 +373,15 @@ public class HomeVendor extends AppCompatActivity {
                     String tToName = dataSnapshot.child(key).child("tToName").getValue().toString();
                     String tId = dataSnapshot.child(key).child("tId").getValue().toString();
                     String tType = dataSnapshot.child(key).child("tType").getValue().toString();
-                    if(tType.equalsIgnoreCase("EncashRequest")||tType.equalsIgnoreCase("Encashed"))
+                    if(!tType.equalsIgnoreCase("Payment"))
                         continue;
                     String tToLocation = dataSnapshot.child(key).child("tLoc").getValue().toString();
-                    if (!(tFrom.equals(uId) || tTo.equals(uId)))
-                        continue;
+//                    if (!(tFrom.equals(uId) || tTo.equals(uId)))
+//                        continue;
                     transactionArrayList.add(new Transaction(Integer.valueOf(tCoins), tDate, tFrom, tFromName, tTo, tToName, tId, tType, tToLocation));
                 }
                 Collections.reverse(transactionArrayList);
                 setListView(transactionArrayList);
-
             }
 
             @Override
@@ -409,10 +391,15 @@ public class HomeVendor extends AppCompatActivity {
         });
     }
 
+    private void speak(String val, String from) {
+            textToSpeech.speak("Received payment of Rupees "+val+" coins from "+from,TextToSpeech.QUEUE_FLUSH,null);
+    }
+
     public void openDirectory(Uri uriToLoad) {
         // Choose a directory using the system's file picker.
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setDataAndType(uriToLoad,  "application/pdf");
         startActivity(intent);
     }
+
 }

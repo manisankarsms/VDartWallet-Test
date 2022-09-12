@@ -1,10 +1,9 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,7 +30,7 @@ public class Encash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encash);
 
-        gRef.orderByKey().limitToLast(10).addValueEventListener(new ValueEventListener() {
+        gRef.orderByKey().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 transactionArrayList.clear();
@@ -46,7 +45,7 @@ public class Encash extends AppCompatActivity {
                     String tId  = dataSnapshot.child(key).child("tId").getValue().toString();
                     String tType  = dataSnapshot.child(key).child("tType").getValue().toString();
                     String tToLocation = dataSnapshot.child(key).child("tLoc").getValue().toString();
-                    if(!(tType.equals("EncashRequest")))
+                    if(!(tType.equalsIgnoreCase("EncashRequest")))
                         continue;
                     transactionArrayList.add(new Transaction(Integer.valueOf(tCoins),tDate,tFrom,tFromName, tTo, tToName,tId,tType,tToLocation));
                 }
@@ -96,10 +95,10 @@ public class Encash extends AppCompatActivity {
                                 myRef2.child("transactions").child(tId).child("tType").setValue("Encashed");
                             }
                         })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("DENY", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+                                myRef2.child("transactions").child(tId).child("tType").setValue("EncashDenied");
                             }
                         })
                         .show();

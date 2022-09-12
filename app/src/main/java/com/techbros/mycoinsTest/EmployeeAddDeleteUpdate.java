@@ -1,44 +1,28 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 
 import static android.content.ContentValues.TAG;
-import static android.provider.CalendarContract.CalendarCache.URI;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.Time;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -47,12 +31,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -65,20 +43,13 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class EmployeeAddDeleteUpdate extends AppCompatActivity {
 
@@ -325,7 +296,7 @@ public class EmployeeAddDeleteUpdate extends AppCompatActivity {
                                 balanceEt.getEditText().setText(String.valueOf(updatedBalance));
                                 updateUserDetails(id,name,loc,pass,type,String.valueOf(updatedBalance),status);
                                 String tId = Transaction.generateTId();
-                                ref4.child(tId).setValue(new Transaction(Integer.valueOf(coins),Transaction.getDate(),"admin",Login.uName,id,name,tId,"Credit",loc));
+                                ref4.child(tId).setValue(new Transaction(Integer.valueOf(coins),Transaction.getDate(),"admin","SuperAdmin",id,name,tId,"Credit",loc));
                                 dialog1.cancel();
                             }
                         });
@@ -492,12 +463,15 @@ public class EmployeeAddDeleteUpdate extends AppCompatActivity {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        transactionArrayList.add(new Transaction(Integer.valueOf(creditCoins.getEditText().getText().toString()),Transaction.getDate(),"admin",Login.uName,userArrayList.get(i).getId(),userArrayList.get(i).getUserName(), tId, "Credit",userArrayList.get(i).getLocation()));
+                        transactionArrayList.add(new Transaction(Integer.valueOf(creditCoins.getEditText().getText().toString()),Transaction.getDate(),"admin","SuperAdmin",userArrayList.get(i).getId(),userArrayList.get(i).getUserName(), tId, "Credit",userArrayList.get(i).getLocation()));
                         //ref4.child(tId).setValue(new Transaction(Integer.valueOf(creditCoins.getEditText().getText().toString()),Transaction.getDate(),"admin",Login.uName,userArrayList.get(i).getId(),userArrayList.get(i).getUserName(), tId, "credit",userArrayList.get(i).getLocation()));
                     }
                 else {
                     String loc = spinner.getSelectedItem().toString();
                     for (int i = 0; i < userArrayList.size(); i++) {
+                        if(!userArrayList.get(i).getUserType().equalsIgnoreCase("employee")){
+                            continue;
+                        }
                         cValue = creditCoins.getEditText().getText().toString();
                         if(!(userArrayList.get(i).getLocation().equalsIgnoreCase(loc)))
                             continue;
@@ -514,7 +488,7 @@ public class EmployeeAddDeleteUpdate extends AppCompatActivity {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        transactionArrayList.add(new Transaction(Integer.valueOf(creditCoins.getEditText().getText().toString()),Transaction.getDate(),"admin",Login.uName,userArrayList.get(i).getId(),userArrayList.get(i).getUserName(), tId, "Credit",userArrayList.get(i).getLocation()));
+                        transactionArrayList.add(new Transaction(Integer.valueOf(creditCoins.getEditText().getText().toString()),Transaction.getDate(),"admin","SuperAdmin",userArrayList.get(i).getId(),userArrayList.get(i).getUserName(), tId, "Credit",userArrayList.get(i).getLocation()));
                         //uploadTransactionData(transactionArrayList);
                         //ref4.child(tId).setValue(new Transaction(Integer.valueOf(creditCoins.getEditText().getText().toString()), Transaction.getDate(), "admin", Login.uName,userArrayList.get(i).getId(),userArrayList.get(i).getUserName(), tId, "credit",userArrayList.get(i).getLocation()));
                     }

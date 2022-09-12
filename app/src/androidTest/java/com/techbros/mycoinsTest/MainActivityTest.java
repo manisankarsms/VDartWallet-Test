@@ -1,4 +1,4 @@
-package com.techbros.mycoins;
+package com.techbros.mycoinsTest;
 
 
 import static androidx.test.espresso.Espresso.onData;

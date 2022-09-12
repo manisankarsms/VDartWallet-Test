@@ -1,7 +1,5 @@
-package com.techbros.mycoins;
-import android.content.BroadcastReceiver;
+package com.techbros.mycoinsTest;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 

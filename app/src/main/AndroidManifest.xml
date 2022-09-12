@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.techbros.mycoins">
+    package="com.techbros.mycoinsTest">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -18,60 +18,60 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyCoins">
         <activity
-            android:name=".NoInternet"
+            android:name="com.techbros.mycoinsTest.NoInternet"
             android:exported="false"
             android:label="@string/title_activity_no_internet"
             android:theme="@style/Theme.MyCoins.NoActionBar" />
         <activity
-            android:name=".DeleteData"
+            android:name="com.techbros.mycoinsTest.DeleteData"
             android:exported="false" />
         <activity
-            android:name=".Feedback"
+            android:name="com.techbros.mycoinsTest.Feedback"
             android:exported="false" />
         <activity
-            android:name=".Dashboard"
+            android:name="com.techbros.mycoinsTest.Dashboard"
             android:exported="false" />
         <activity
-            android:name=".Backend"
+            android:name="com.techbros.mycoinsTest.Backend"
             android:exported="false" />
         <activity
-            android:name=".VendorMain"
+            android:name="com.techbros.mycoinsTest.VendorMain"
             android:exported="false" />
         <activity
-            android:name=".LocationAdmin"
+            android:name="com.techbros.mycoinsTest.LocationAdmin"
             android:exported="false" />
         <activity
-            android:name=".ResetPassword"
+            android:name="com.techbros.mycoinsTest.ResetPassword"
             android:exported="false" />
         <activity
-            android:name=".Reports"
+            android:name="com.techbros.mycoinsTest.Reports"
             android:exported="false" />
         <activity
-            android:name=".Encash"
+            android:name="com.techbros.mycoinsTest.Encash"
             android:exported="false" />
         <activity
-            android:name=".EmployeeAddDeleteUpdate"
+            android:name="com.techbros.mycoinsTest.EmployeeAddDeleteUpdate"
             android:exported="false" />
         <activity
-            android:name=".Payment"
+            android:name="com.techbros.mycoinsTest.Payment"
             android:exported="false" />
         <activity
-            android:name=".ScanBarCodeActivity"
+            android:name="com.techbros.mycoinsTest.ScanBarCodeActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeVendor"
+            android:name="com.techbros.mycoinsTest.HomeVendor"
             android:exported="false" />
         <activity
-            android:name=".SuperAdminDashboard"
+            android:name="com.techbros.mycoinsTest.SuperAdminDashboard"
             android:exported="false" />
         <activity
-            android:name=".Home"
+            android:name="com.techbros.mycoinsTest.Home"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name="com.techbros.mycoinsTest.Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.techbros.mycoinsTest.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
